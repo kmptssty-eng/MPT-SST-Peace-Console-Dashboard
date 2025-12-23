@@ -1,26 +1,48 @@
-# MPT-SST Peace Console Panoramic Operational Dashboard
+MPT-SST Peace Console Panoramic Operational Dashboard
+======================================================
 
-This repository contains the integrated **MPT-SST Peace Console Dashboard** document and related visualizations.  
+This repository contains the integrated MPT-SST Peace Console Dashboard document, related visualizations, and modules for research, reference, and interactive exploration of the Metaphysical Peace Theory and Spiritual-Structural Transformation (MPT-SST) framework.
 
-## Contents
-1. MPT-SST Peace Console Dashboard (Word/PDF)
-2. Integrated Modules:
-   - Metaphysical Foundations Panel
-   - Methodology Tab
-   - Simulation Mode Toggle
-   - Ethics and Integrity Charter
-   - PPWASW Module
-   - Two Deployment Versions
-3. Diagrams (uploaded separately)
+Contents
+--------
 
-## Purpose
-To provide a holistic, interactive framework for **Metaphysical Peace Theory and Spiritual-Structural Transformation (MPT-SST)**, ready for research, reference, and further development.
+1. MPT-SST Peace Console Dashboard  
+   - Available as Word (.docx) and PDF (.pdf) formats.
 
-## Usage
-- Open the dashboard document (Word/PDF) to explore the modules and visualizations.
-- Review diagrams for system architecture and operational flow.
+2. Integrated Modules  
+   - Metaphysical Foundations Panel  
+   - Methodology Tab  
+   - Simulation Mode Toggle  
+   - Ethics and Integrity Charter  
+   - PPWASW Module (Participatory Peacebuilding and Adaptive Systems Watch)  
+   - Two Deployment Versions (for tablet and desktop)  
 
-## Author
-**KAFINGA, Aliyu Sani**  
+3. Diagrams  
+   - MPT-SST Peace Console Overview (A_digital_illustration_showcases_the_MPT-SST_Peace.png)  
+   - Additional diagrams uploaded separately
+
+Purpose
+-------
+
+To provide a holistic, interactive framework for exploring MPT-SST theory, operationalizing metaphysical peace principles, and monitoring adaptive peacebuilding systems. The dashboard integrates consciousness resonance, ethical safeguards, and community participation metrics for advanced research and implementation.
+
+Usage
+-----
+
+- Open the dashboard document (Word/PDF) to explore the modules and visualizations.  
+- Review diagrams for system architecture, operational flow, and PPWASW monitoring.  
+- Modules such as the Simulation Mode Toggle and PPWASW provide interactive conceptual frameworks for research and training.
+
+Author
+------
+
+KAFINGA, Aliyu Sani  
 Founder of MPT–SST Spiritual-Transformation Initiative, Nigeria  
 Email: kmpt.ssty@gmail.com
+
+Notes
+-----
+
+- Repository is designed for research, educational, and operational purposes.  
+- All modules are conceptual and should be adapted for practical applications in peace studies.  
+- PPWASW highlights participatory monitoring and adaptive system responses for peacebuilding initiatives.
