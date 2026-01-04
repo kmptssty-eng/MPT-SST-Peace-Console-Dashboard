@@ -1,4 +1,4 @@
-MPT-SST Peace Console Panoramic Operational Dashboard
+ Peace Console Panoramic Operational Dashboard
 ======================================================
 
 This repository contains the integrated MPT-SST Peace Console Dashboard document, related visualizations, and modules for research, reference, and interactive exploration of the Metaphysical Peace Theory and Spiritual-Structural Transformation (MPT-SST) framework.
