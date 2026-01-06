@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MPT-SST Interactive Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background: #f5f7fa; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 20px; }
+        h1 { color: #2c3e50; text-align: center; margin: 20px 0; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        
+        .dashboard-section { margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; }
+        h2 { color: #3498db; margin-bottom: 15px; }
+        
+        .cri-display { text-align: center; margin: 30px 0; }
+        .cri-value { font-size: 72px; color: #2c3e50; font-weight: bold; }
+        .cri-bar { width: 80%; height: 30px; background: linear-gradient(to right, #e74c3c, #f39c12, #2ecc71); margin: 20px auto; border-radius: 15px; position: relative; }
+        .cri-indicator { position: absolute; top: -5px; width: 40px; height: 40px; background: #2c3e50; border-radius: 50%; transition: left 0.5s; }
+        
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .control-group { padding: 15px; background: white; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        
+        .slider-container { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; color: #555; }
+        input[type="range"] { width: 100%; }
+        .value-display { text-align: center; font-size: 24px; color: #2c3e50; margin: 10px 0; }
+        
+        .cases { display: flex; gap: 10px; margin: 20px 0; }
+        .case-btn { padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .case-btn:hover { background: #2980b9; }
+        
+        .interventions { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+        .int-btn { padding: 10px 15px; background: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .int-btn:hover { background: #27ae60; }
+        
+        .status { text-align: center; padding: 10px; background: #e8f4fd; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 MPT-SST Resonance Dashboard</h1>
+        <p class="subtitle">Interactive Simulation of Consciousness-Structure Alignment</p>
+        
+        <div class="dashboard-section">
+            <h2>Consciousness Resonance Index (CRI)</h2>
+            <div class="cri-display">
+                <div class="cri-value" id="criScore">72</div>
+                <div class="cri-bar">
+                    <div class="cri-indicator" id="criIndicator" style="left: 72%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; width: 80%; margin: 0 auto;">
+                    <span>Dissonance (0)</span>
+                    <span>Resonance (100)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Case Studies</h2>
+            <div class="cases">
+                <button class="case-btn" onclick="loadCase('postConflict')">Post-Conflict Zone</button>
+                <button class="case-btn" onclick="loadCase('corporate')">Corporate Ethics Crisis</button>
+                <button class="case-btn" onclick="loadCase('community')">Community Organization</button>
+                <button class="case-btn" onclick="loadCase('reset')">Reset (Custom)</button>
+            </div>
+            <div class="status" id="caseStatus">Current: Community Organization</div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>Adjust Resonance Dimensions</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <h3>Inner Resonance</h3>
+                    <div class="slider-container">
+                        <label>Self-Awareness</label>
+                        <input type="range" min="0" max="100" value="80" class="slider" id="selfAwareness" oninput="updateCRI()">
+                        <div class="value-display" id="selfAwarenessValue">80</div>
+                    </div>
+                    <div class="slider-container">
+                        <label>Worldview Coherence</label>
+                        <input type="range" min="0" max="100" value="60" class="slider" id="worldview" oninput="updateCRI()">
+                        <div class="value-display" id="worldviewValue">60</div>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <h3>Relational Resonance</h3>
+                    <div class="slider-container">
+                        <label>Empathic Density</label>
+                        <input type="range" min="0" max="100" value="85" class="slider" id="empathic" oninput="updateCRI()">
+                        <div class="value-display" id="empathicValue">85</div>
+                    </div>
+                    <div class="slider-container">
+                        <label>Dialogic Quality</label>
+                        <input type="range" min="0" max="100" value="75" class="slider" id="dialogic" oninput="updateCRI()">
+                        <div class="value-display" id="dialogicValue">75</div>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <h3>Structural Resonance</h3>
+                    <div class="slider-container">
+                        <label>Equity-Permeation</label>
+                        <input type="range" min="0" max="100" value="70" class="slider" id="equity" oninput="updateCRI()">
+                        <div class="value-display" id="equityValue">70</div>
+                    </div>
+                    <div class="slider-container">
+                        <label>Participatory Design</label>
+                        <input type="range" min="0" max="100" value="80" class="slider" id="participatory" oninput="updateCRI()">
+                        <div class="value-display" id="participatoryValue">80</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <h2>MPT-SST Interventions</h2>
+            <div class="interventions">
+                <button class="int-btn" onclick="applyIntervention('truth')">Truth Commission</button>
+                <button class="int-btn" onclick="applyIntervention('dialogue')">Dialogue Circles</button>
+                <button class="int-btn" onclick="applyIntervention('reform')">Structural Reform</button>
+                <button class="int-btn" onclick="applyIntervention('education')">Consciousness Education</button>
+                <button class="int-btn" onclick="applyIntervention('resetAll')">Reset All Sliders</button>
+            </div>
+            <div class="status" id="interventionStatus">Ready for intervention simulation</div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; color: #666; font-size: 14px;">
+            <p><strong>MPT-SST Principle:</strong> "The Dashboard Overrides the Guru" - Aliyu Sani Kafinga</p>
+            <p>This interactive model demonstrates the Consciousness Resonance Index framework.</p>
+        </div>
+    </div>
+
+    <script>
+        // Initial values
+        let currentCase = 'community';
+        
+        // Case study data
+        const cases = {
+            postConflict: {
+                name: "Post-Conflict Zone",
+                values: [40, 35, 30, 40, 35, 30],
+                message: "High dissonance, structural damage, low trust"
+            },
+            corporate: {
+                name: "Corporate Ethics Crisis",
+                values: [70, 65, 90, 80, 85, 75],
+                message: "Structural compliance high but consciousness low"
+            },
+            community: {
+                name: "Community Organization",
+                values: [80, 60, 85, 75, 70, 80],
+                message: "Good relational resonance, structural challenges"
+            },
+            reset: {
+                name: "Custom Scenario",
+                values: [50, 50, 50, 50, 50, 50],
+                message: "Adjust sliders to create your own scenario"
+            }
+        };
+        
+        // Initialize function
+        function initializeDashboard() {
+            updateCRI();
+            document.getElementById('caseStatus').textContent = 'Current: Community Organization';
+        }
+        
+        // Update CRI based on slider values
+        function updateCRI() {
+            // Get all slider values
+            const selfAwareness = parseInt(document.getElementById('selfAwareness').value);
+            const worldview = parseInt(document.getElementById('worldview').value);
+            const empathic = parseInt(document.getElementById('empathic').value);
+            const dialogic = parseInt(document.getElementById('dialogic').value);
+            const equity = parseInt(document.getElementById('equity').value);
+            const participatory = parseInt(document.getElementById('participatory').value);
+            
+            // Update value displays
+            document.getElementById('selfAwarenessValue').textContent = selfAwareness;
+            document.getElementById('worldviewValue').textContent = worldview;
+            document.getElementById('empathicValue').textContent = empathic;
+            document.getElementById('dialogicValue').textContent = dialogic;
+            document.getElementById('equityValue').textContent = equity;
+            document.getElementById('participatoryValue').textContent = participatory;
+            
+            // Calculate CRI (weighted average)
+            const cri = Math.round(
+                (selfAwareness * 0.15) +
+                (worldview * 0.15) +
+                (empathic * 0.20) +
+                (dialogic * 0.20) +
+                (equity * 0.15) +
+                (participatory * 0.15)
+            );
+            
+            // Update CRI display
+            document.getElementById('criScore').textContent = cri;
+            document.getElementById('criIndicator').style.left = cri + '%';
+            
+            // Color code based on value
+            const criElement = document.getElementById('criScore');
+            if (cri < 40) {
+                criElement.style.color = '#e74c3c';
+            } else if (cri < 70) {
+                criElement.style.color = '#f39c12';
+            } else {
+                criElement.style.color = '#2ecc71';
+            }
+        }
+        
+        // Load a case study
+        function loadCase(caseId) {
+            currentCase = caseId;
+            const caseData = cases[caseId];
+            
+            // Set slider values
+            document.getElementById('selfAwareness').value = caseData.values[0];
+            document.getElementById('worldview').value = caseData.values[1];
+            document.getElementById('empathic').value = caseData.values[2];
+            document.getElementById('dialogic').value = caseData.values[3];
+            document.getElementById('equity').value = caseData.values[4];
+            document.getElementById('participatory').value = caseData.values[5];
+            
+            // Update display
+            document.getElementById('caseStatus').textContent = `Current: ${caseData.name} - ${caseData.message}`;
+            
+            // Update CRI
+            updateCRI();
+        }
+        
+        // Apply interventions
+        function applyIntervention(type) {
+            let message = "";
+            
+            switch(type) {
+                case 'truth':
+                    // Increase dialogic and equity
+                    document.getElementById('dialogic').value = Math.min(100, parseInt(document.getElementById('dialogic').value) + 15);
+                    document.getElementById('equity').value = Math.min(100, parseInt(document.getElementById('equity').value) + 10);
+                    message = "Truth Commission applied: +15 Dialogic Quality, +10 Equity-Permeation";
+                    break;
+                    
+                case 'dialogue':
+                    // Increase self-awareness and empathic
+                    document.getElementById('selfAwareness').value = Math.min(100, parseInt(document.getElementById('selfAwareness').value) + 12);
+                    document.getElementById('empathic').value = Math.min(100, parseInt(document.getElementById('empathic').value) + 10);
+                    message = "Dialogue Circles applied: +12 Self-Awareness, +10 Empathic Density";
+                    break;
+                    
+                case 'reform':
+                    // Increase equity and participatory
+                    document.getElementById('equity').value = Math.min(100, parseInt(document.getElementById('equity').value) + 20);
+                    document.getElementById('participatory').value = Math.min(100, parseInt(document.getElementById('participatory').value) + 15);
+                    message = "Structural Reform applied: +20 Equity-Permeation, +15 Participatory Design";
+                    break;
+                    
+                case 'education':
+                    // Increase all consciousness factors
+                    document.getElementById('selfAwareness').value = Math.min(100, parseInt(document.getElementById('selfAwareness').value) + 10);
+                    document.getElementById('worldview').value = Math.min(100, parseInt(document.getElementById('worldview').value) + 8);
+                    document.getElementById('empathic').value = Math.min(100, parseInt(document.getElementById('empathic').value) + 10);
+                    message = "Consciousness Education applied: +10 Self-Awareness, +8 Worldview Coherence, +10 Empathic Density";
+                    break;
+                    
+                case 'resetAll':
+                    loadCase(currentCase);
+                    message = "Reset to current case study values";
+                    break;
+            }
+            
+            // Update display
+            document.getElementById('interventionStatus').textContent = message;
+            
+            // Update CRI
+            updateCRI();
+            
+            // Show temporary confirmation
+            setTimeout(() => {
+                document.getElementById('interventionStatus').textContent = "Intervention applied. Adjust sliders or try another.";
+            }, 3000);
+        }
+        
+        // Initialize when page loads
+        window.onload = initializeDashboard;
+    </script>
+</body>
+</html>
