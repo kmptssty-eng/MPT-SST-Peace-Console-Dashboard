@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPT-SST: Consciousness Resonance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 800px;
+        }
+        
+        .sidebar {
+            background: #f8fafc;
+            padding: 25px;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .main-content {
+            padding: 30px;
+            background: white;
+        }
+        
+        .theory-map {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .case-studies {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            color: #4a6491;
+            margin: 25px 0 15px 0;
+            font-size: 1.2rem;
+        }
+        
+        .case-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .case-btn {
+            padding: 12px 15px;
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        
+        .case-btn:hover {
+            background: #bbdefb;
+            transform: translateX(5px);
+        }
+        
+        .case-btn.active {
+            background: #4a90e2;
+            color: white;
+            border-color: #357abd;
+        }
+        
+        .cri-display {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+        }
+        
+        .cri-score {
+            text-align: center;
+        }
+        
+        .cri-value {
+            font-size: 4.5rem;
+            font-weight: 300;
+            color: #2c3e50;
+            line-height: 1;
+        }
+        
+        .cri-label {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .cri-gauge {
+            flex: 1;
+            height: 120px;
+            background: linear-gradient(90deg, #e74c3c 0%, #f1c40f 50%, #2ecc71 100%);
+            border-radius: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gauge-pointer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #2c3e50;
+            transition: left 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .dimension-scores {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .dimension-box {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .dimension-value {
+            font-size: 2.2rem;
+            font-weight: 300;
+            margin: 10px 0;
+        }
+        
+        .dimension-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .inner-res { border-top: 4px solid #9b59b6; }
+        .relational-res { border-top: 4px solid #3498db; }
+        .structural-res { border-top: 4px solid #2ecc71; }
+        
+        .control-panel {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .dimension-control {
+            margin-bottom: 25px;
+        }
+        
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .dimension-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .sub-component {
+            margin-left: 20px;
+            margin-top: 15px;
+        }
+        
+        .sub-control {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        
+        .sub-label {
+            width: 180px;
+            font-size: 0.9rem;
+        }
+        
+        .sub-value {
+            width: 50px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .intervention-panel {
+            background: #e8f4fd;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #4a90e2;
+        }
+        
+        .intervention-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .intervention-btn {
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .intervention-btn:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .simulation-note {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MPT-SST Resonance Dashboard</h1>
+            <p class="subtitle">An interactive simulation of the Consciousness Resonance Index (CRI) - Monitoring the alignment between consciousness and structure in peacebuilding systems</p>
+        </header>
+        
+        <div class="dashboard-grid">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <div class="theory-map">
+                    <h2>Theory Map</h2>
+                    <div style="height: 200px; background: #f0f4f8; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: #666; margin-bottom: 15px;">
+                        [Interactive MPT-SST Framework Diagram]
+                    </div>
+                    <p style="font-size: 0.9rem; color: #666; line-height: 1.5;">
+                        CRI measures the resonance between <strong>Consciousness</strong> (inner states) and <strong>Structure</strong> (social systems).
+                    </p>
+                </div>
+                
+                <div class="case-studies">
+                    <h2>Case Studies</h2>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 0.95rem;">Load a scenario to simulate:</p>
+                    <div class="case-buttons">
+                        <button class="case-btn active" onclick="loadCase('postConflict')">
+                            <strong>Post-Conflict Community</strong><br>
+                            <small>Low trust, high structural damage</small>
+                        </button>
+                        <button class="case-btn" onclick="loadCase('corporateEthics')">
+                            <strong>Corporate Ethics Crisis</strong><br>
+                            <small>Values-structure misalignment</small>
+                        </button>
+                        <button class="case-btn" onclick="loadCase('communityOrg')">
+                            <strong>Community Organization</strong><br>
+                            <small>Moderate resonance, growth potential</small>
+                        </button>
+                        <button class="case-btn" onclick="loadCase('custom')">
+                            <strong>Custom Scenario</strong><br>
+                            <small>Adjust all parameters manually</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="simulation-note">
+                    <strong>Simulation Dashboard:</strong> This interactive model demonstrates how changes in consciousness and structural dimensions affect overall resonance. Adjust sliders to explore interventions.
+                </div>
+                
+                <!-- CRI Display -->
+                <div class="cri-display">
+                    <div class="cri-score">
+                        <div class="cri-value" id="criValue">72</div>
+                        <div class="cri-label">Consciousness Resonance Index</div>
+                    </div>
+                    <div class="cri-gauge">
+                        <div class="gauge-pointer" id="gaugePointer" style="left: 72%;"></div>
+                    </div>
+                </div>
+                
+                <!-- Dimension Scores -->
+                <div class="dimension-scores">
+                    <div class="dimension-box inner-res">
+                        <div class="dimension-label">Inner Resonance</div>
+                        <div class="dimension-value" id="innerValue">65</div>
+                        <div style="font-size: 0.8rem; color: #888;">Consciousness Alignment</div>
+                    </div>
+                    <div class="dimension-box relational-res">
+                        <div class="dimension-label">Relational Resonance</div>
+                        <div class="dimension-value" id="relationalValue">78</div>
+                        <div style="font-size: 0.8rem; color: #888;">Social Fabric Quality</div>
+                    </div>
+                    <div class="dimension-box structural-res">
+                        <div class="dimension-label">Structural Resonance</div>
+                        <div class="dimension-value" id="structuralValue">73</div>
+                        <div style="font-size: 0.8rem; color: #888;">Institutional Alignment</div>
+                    </div>
+                </div>
+                
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <h2>Adjust Resonance Dimensions</h2>
+                    
+                    <!-- Inner Resonance Controls -->
+                    <div class="dimension-control">
+                        <div class="dimension-header">
+                            <h3>Inner Resonance</h3>
+                            <span id="innerDisplay">65</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="65" class="dimension-slider" id="innerSlider" oninput="updateInnerResonance()">
+                        
+                        <div class="sub-component">
+                            <div class="sub-control">
+                                <div class="sub-label">Self-Awareness Index</div>
+                                <input type="range" min="0" max="100" value="80" class="dimension-slider" id="selfAwareness" oninput="updateCRI()">
+                                <div class="sub-value" id="selfAwarenessValue">80</div>
+                            </div>
+                            <div class="sub-control">
+                                <div class="sub-label">Worldview Coherence</div>
+                                <input type="range" min="0" max="100" value="60" class="dimension-slider" id="worldview" oninput="updateCRI()">
+                                <div class="sub-value" id="worldviewValue">60</div>
+                            </div>
+                            <div class="sub-control">
+                                <div class="sub-label">Transcendent Orientation</div>
+                                <input type="range" min="0" max="100" value="55" class="dimension-slider" id="transcendent" oninput="updateCRI()">
+                                <div class="sub-value" id="transcendentValue">55</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Relational Resonance Controls -->
+                    <div class="dimension-control">
+                        <div class="dimension-header">
+                            <h3>Relational Resonance</h3>
+                            <span id="relationalDisplay">78</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="78" class="dimension-slider" id="relationalSlider" oninput="updateRelationalResonance()">
+                        
+                        <div class="sub-component">
+                            <div class="sub-control">
+                                <div class="sub-label">Empathic Density</div>
+                                <input type="range" min="0" max="100" value="85" class="dimension-slider" id="empathic" oninput="updateCRI()">
+                                <div class="sub-value" id="empathicValue">85</div>
+                            </div>
+                            <div class="sub-control">
+                                <div class="sub-label">Dialogic Communication</div>
+                                <input type="range" min="0" max="100" value="75" class="dimension-slider" id="dialogic" oninput="updateCRI()">
+                                <div class="sub-value" id="dialogicValue">75</div>
+                            </div>
+                            <div class="sub-control">
+                                <div class="sub-label">Conflict Transformation</div>
+                                <input type="range" min="0" max="100" value="74" class="dimension-slider" id="conflict" oninput="updateCRI()">
+                                <div class="sub-value" id="conflictValue">74</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Structural Resonance Controls -->
+                    <div class="dimension-control">
+                        <div class="dimension-header">
+                            <h3>Structural Resonance</h3>
+                            <span id="structuralDisplay">73</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="73" class="dimension-slider" id="structuralSlider" oninput="updateStructuralResonance()">
+                        
+                        <div class="sub-component">
+                            <div class="sub-control">
+                                <div class="sub-label">Equity-Permeation</div>
+                                <input type="range" min="0" max="100" value="70" class="dimension-slider" id="equity" oninput="updateCRI()">
+                                <div class="sub-value" id="equityValue">70</div>
+                            </div>
+                            <div class="sub-control">
+                                <div class="sub-label">Participatory Architecture</div>
+                                <input type="range" min="0" max="100" value="80" class="dimension-slider" id="participatory" oninput="updateCRI()">
+                                <div class="sub-value" id="participatoryValue">80</div>
+                            </div>
+                            <div class="sub-control">
+                                <div class="sub-label">Generative Governance</div>
+                                <input type="range" min="0" max="100" value="69" class="dimension-slider" id="governance" oninput="updateCRI()">
+                                <div class="sub-value" id="governanceValue">69</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Intervention Panel -->
+                <div class="intervention-panel">
+                    <h2>Apply MPT-SST Interventions</h2>
+                    <p style="margin-bottom: 15px; color: #555;">Simulate the impact of specific peacebuilding interventions on resonance:</p>
+                    <div class="intervention-buttons">
+                        <button class="intervention-btn" onclick="applyIntervention('truthCommission')">Truth & Reconciliation Commission</button>
+                        <button class="intervention-btn" onclick="applyIntervention('dialogueCircles')">Consciousness Dialogue Circles</button>
+                        <button class="intervention-btn" onclick="applyIntervention('structuralReform')">Structural Equity Reform</button>
+                        <button class="intervention-btn" onclick="applyIntervention('leadershipDevelopment')">Resonant Leadership Development</button>
+                        <button class="intervention-btn" onclick="resetToBaseline()">Reset to Baseline</button>
+                    </div>
+                </div>
+                
+                <div class="footer-note">
+                    <p><strong>Note:</strong> This is a conceptual simulation for the Metaphysical Peace Theory (MPT-SST) framework. The CRI model demonstrates theoretical relationships between consciousness and structural dimensions.</p>
+                    <p style="margin-top: 10px; font-style: italic;">"The dashboard overrides the guru" — Aliyu Sani Kafinga</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize CRI values
+        let cri = 72;
+        let innerResonance = 65;
+        let relationalResonance = 78;
+        let structuralResonance = 73;
+        
+        // Subcomponent values
+        let subComponents = {
+            selfAwareness: 80,
+            worldview: 60,
+            transcendent: 55,
+            empathic: 85,
+            dialogic: 75,
+            conflict: 74,
+            equity: 70,
+            participatory: 80,
+            governance: 69
+        };
+        
+        // Case study data
+        const cases = {
+            postConflict: {
+                name: "Post-Conflict Community",
+                inner: 45,
+                relational: 35,
+                structural: 30,
+                subComponents: [40, 50, 45, 30, 35, 40, 25, 35, 30]
+            },
+            corporateEthics: {
+                name: "Corporate Ethics Crisis", 
+                inner: 70,
+                relational: 60,
+                structural: 85,
+                subComponents: [75, 65, 70, 55, 65, 60, 90, 80, 85]
+            },
+            communityOrg: {
+                name: "Community Organization",
+                inner: 65,
+                relational: 78,
+                structural: 73,
+                subComponents: [80, 60, 55, 85, 75, 74, 70, 80, 69]
+            },
+            custom: {
+                name: "Custom Scenario",
+                inner: 50,
+                relational: 50,
+                structural: 50,
+                subComponents: [50, 50, 50, 50, 50, 50, 50, 50, 50]
+            }
+        };
+        
+        // Load a case study
+        function loadCase(caseId) {
+            const caseData = cases[caseId];
+            
+            // Update case button states
+            document.querySelectorAll('.case-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Set dimension values
+            innerResonance = caseData.inner;
+            relationalResonance = caseData.relational;
+            structuralResonance = caseData.structural;
+            
+            // Set subcomponent values
+            const subIds = ['selfAwareness', 'worldview', 'transcendent', 'empathic', 'dialogic', 'conflict', 'equity', 'participatory', 'governance'];
+            subIds.forEach((id, index) => {
+                subComponents[id] = caseData.subComponents[index];
+                document.getElementById(id).value = caseData.subComponents[index];
+                document.getElementById(id + 'Value').textContent = caseData.subComponents[index];
+            });
+            
+            // Update sliders and displays
+            updateDimensionSliders();
+            updateCRI();
+        }
+        
+        // Update dimension sliders from subcomponents
+        function updateDimensionSliders() {
+            // Inner resonance = average of its subcomponents
+            const innerAvg = Math.round((subComponents.selfAwareness + subComponents.worldview + subComponents.transcendent) / 3);
+            innerResonance = innerAvg;
+            document.getElementById('innerSlider').value = innerAvg;
+            
+            // Relational resonance = average of its subcomponents  
+            const relationalAvg = Math.round((subComponents.empathic + subComponents.dialogic + subComponents.conflict) / 3);
+            relationalResonance = relationalAvg;
+            document.getElementById('relationalSlider').value = relationalAvg;
+            
+            // Structural resonance = average of its subcomponents
+            const structuralAvg = Math.round((subComponents.equity + subComponents.participatory + subComponents.governance) / 3);
+            structuralResonance = structuralAvg;
+            document.getElementById('structuralSlider').value = structuralAvg;
+            
+            // Update dimension displays
+            document.getElementById('innerDisplay').textContent = innerAvg;
+            document.getElementById('relationalDisplay').textContent = relationalAvg;
+            document.getElementById('structuralDisplay').textContent = structuralAvg;
+            
+            document.getElementById('innerValue').textContent = innerAvg;
+            document.getElementById('relationalValue').textContent = relationalAvg;
+            document.getElementById('structuralValue').textContent = structuralAvg;
+        }
+        
+        // Update CRI based on all values
+        function updateCRI() {
+            // Update subcomponent displays
+            Object.keys(subComponents).forEach(id => {
+                subComponents[id] = parseInt(document.getElementById(id).value);
+                document.getElementById(id + 'Value').textContent = subComponents[id];
+            });
+            
+            // Update dimension values from subcomponents
+            updateDimensionSliders();
+            
+            // Calculate CRI (weighted average: Inner 30%, Relational 40%, Structural 30%)
+            cri = Math.round(
+                (innerResonance * 0.3) + 
+                (relationalResonance * 0.4) + 
+                (structuralResonance * 0.3)
+            );
+            
+            // Update displays
+            document.getElementById('criValue').textContent = cri;
+            document.getElementById('gaugePointer').style.left = cri + '%';
+            
+            // Color code the CRI value
+            const criElement = document.getElementById('criValue');
+            if (cri < 40) {
+                criElement.style.color = '#e74c3c';
+            } else if (cri < 70) {
+                criElement.style.color = '#f1c40f';
+            } else {
+                criElement.style.color = '#2ecc71';
+            }
+        }
+        
+        // Update inner resonance from master slider
+        function updateInnerResonance() {
+            const value = parseInt(document.getElementById('innerSlider').value);
+            innerResonance = value;
+            
+            // Distribute change proportionally to subcomponents
+            const currentAvg = (subComponents.selfAwareness + subComponents.worldview + subComponents.transcendent) / 3;
+            const ratio = value / currentAvg;
+            
+            subComponents.selfAwareness = Math.min(100, Math.round(subComponents.selfAwareness * ratio));
+            subComponents.worldview = Math.min(100, Math.round(subComponents.worldview * ratio));
+            subComponents.transcendent = Math.min(100, Math.round(subComponents.transcendent * ratio));
+            
+            // Update UI
+            document.getElementById('selfAwareness').value = subComponents.selfAwareness;
+            document.getElementById('worldview').value = subComponents.worldview;
+            document.getElementById('transcendent').value = subComponents.transcendent;
+            
+            updateCRI();
+        }
+        
+        // Update relational resonance from master slider
+        function updateRelationalResonance() {
+            const value = parseInt(document.getElementById('relationalSlider').value);
+            relationalResonance = value;
+            
+            // Distribute change proportionally
+            const currentAvg = (subComponents.empathic + subComponents.dialogic + subComponents.conflict) / 3;
+            const ratio = value / currentAvg;
+            
+            subComponents.empathic = Math.min(100, Math.round(subComponents.empathic * ratio));
+            subComponents.dialogic = Math.min(100, Math.round(subComponents.dialogic * ratio));
+            subComponents.conflict = Math.min(100, Math.round(subComponents.conflict * ratio));
+            
+            // Update UI
+            document.getElementById('empathic').value = subComponents.empathic;
+            document.getElementById('dialogic').value = subComponents.dialogic;
+            document.getElementById('conflict').value = subComponents.conflict;
+            
+            updateCRI();
+        }
+        
+        // Update structural resonance from master slider
+        function updateStructuralResonance() {
+            const value = parseInt(document.getElementById('structuralSlider').value);
+            structuralResonance = value;
+            
+            // Distribute change proportionally
+            const currentAvg = (subComponents.equity + subComponents.participatory + subComponents.governance) / 3;
+            const ratio = value / currentAvg;
+            
+            subComponents.equity = Math.min(100, Math.round(subComponents.equity * ratio));
+            subComponents.participatory = Math.min(100, Math.round(subComponents.participatory * ratio));
+            subComponents.governance = Math.min(100, Math.round(subComponents.governance * ratio));
+            
+            // Update UI
+            document.getElementById('equity').value = subComponents.equity;
+            document.getElementById('participatory').value = subComponents.participatory;
+            document.getElementById('governance').value = subComponents.governance;
+            
+            updateCRI();
+        }
+        
+        // Apply interventions
+        function applyIntervention(type) {
+            let message = "";
+            
+            switch(type) {
+                case 'truthCommission':
+                    // Increases relational and structural resonance
+                    subComponents.dialogic = Math.min(100, subComponents.dialogic + 15);
+                    subComponents.conflict = Math.min(100, subComponents.conflict + 12);
+                    subComponents.equity = Math.min(100, subComponents.equity + 10);
+                    message = "Truth Commission applied: +15 Dialogic, +12 Conflict Transformation, +10 Equity";
+                    break;
+                    
+                case 'dialogueCircles':
+                    // Increases inner and relational resonance
+                    subComponents.selfAwareness = Math.min(100, subComponents.selfAwareness + 10);
+                    subComponents.empathic = Math.min(100, subComponents.empathic + 12);
+                    subComponents.dialogic = Math.min(100, subComponents.dialogic + 8);
+                    message = "Dialogue Circles applied: +10 Self-Awareness, +12 Empathic Density, +8 Dialogic";
+                    break;
+                    
+                case 'structuralReform':
+                    // Increases structural resonance
+                    subComponents.equity = Math.min(100, subComponents.equity + 20);
+                    subComponents.participatory = Math.min(100, subComponents.participatory + 15);
+                    subComponents.governance = Math.min(100, subComponents.governance + 10);
+                    message = "Structural Reform applied: +20 Equity, +15 Participation, +10 Governance";
+                    break;
+                    
+                case 'leadershipDevelopment':
+                    // Increases all dimensions
+                    subComponents.selfAwareness = Math.min(100, subComponents.selfAwareness + 12);
+                    subComponents.transcendent = Math.min(100, subComponents.transcendent + 10);
+                    subComponents.empathic = Math.min(100, subComponents.empathic + 8);
+                    subComponents.governance = Math.min(100, subComponents.governance + 15);
+                    message = "Leadership Development applied: +12 Self-Awareness, +10 Transcendent, +8 Empathic, +15 Governance";
+                    break;
+            }
+            
+            // Show intervention message
+            alert(message);
+            
+            // Update UI
+            Object.keys(subComponents).forEach(id => {
+                document.getElementById(id).value = subComponents[id];
+            });
+            
+            updateCRI();
+        }
+        
+        // Reset to baseline
+        function resetToBaseline() {
+            loadCase('communityOrg');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCRI();
+        });
+    </script>
+</body>
+</html>
